@@ -1,12 +1,11 @@
 <template>
   <div id="home" class="wrapper">
-    <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <scroll class="content"
-            ref="scroll"
-            :probe-type="3"
-            @scroll="contentScroll"
-            :pull-up-load="true"
-            @pullingUp="loadMore">
+    <nav-bar class="home-nav">
+      <div slot="center">购物街</div>
+    </nav-bar>
+    <scroll class="content" ref="scroll"
+            :probe-type="3" @scroll="contentScroll"
+            :pull-up-load="true" @pullingUp="loadMore">
       <home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
@@ -15,9 +14,13 @@
                    @tabClick="tabClick"/>
       <good-list :goods="showGoods"/>
     </scroll>
-    <div>呵呵呵呵</div>
-    <back-top @click.native="backClick" v-show="isShowBackTop"/>
+    <transition name="back-top">
+      <back-top @click.native="backClick" v-show="isShowBackTop"/>
+    </transition>
   </div>
+
+  <!--    <back-top @click.native="backClick" v-show="isShowBackTop"/>-->
+
 </template>
 
 <script>
@@ -31,7 +34,7 @@
   import Scroll from 'components/common/scroll/Scroll'
   import BackTop from 'components/content/backTop/BackTop'
 
-  import { getHomeMultidata, getHomeGoods } from "network/home"
+  import {getHomeMultidata, getHomeGoods} from "network/home"
 
   export default {
     name: "Home",
@@ -90,13 +93,13 @@
         }
       },
       backClick() {
-        this.$refs.scroll.scrollTo(0, 0)
+        this.$refs.scroll.scrollTo(0, 0);
       },
       contentScroll(position) {
-        this.isShowBackTop = (-position.y) > 1000
+        this.isShowBackTop = (-position.y) > 500
       },
       loadMore() {
-        this.getHomeGoods(this.currentType)
+        this.getHomeGoods(this.currentType);
       },
       /**
        * 网络请求相关的方法
@@ -109,11 +112,12 @@
         })
       },
       getHomeGoods(type) {
-        const page = this.goods[type].page + 1
+        let page = this.goods[type].page + 1
         getHomeGoods(type, page).then(res => {
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
 
+          // 调用子组件方法
           this.$refs.scroll.finishPullUp()
         })
       }
@@ -146,6 +150,7 @@
   }
 
   .content {
+    height: 400px;
     overflow: hidden;
 
     position: absolute;
@@ -155,9 +160,18 @@
     right: 0;
   }
 
-  /*.content {*/
-    /*height: calc(100% - 93px);*/
-    /*overflow: hidden;*/
+  .content {
+    height: calc(100% - 93px);
+    overflow: hidden;
     /*margin-top: 44px;*/
-  /*}*/
+  }
+
+  .back-top-enter-active, .back-top-leave-active {
+    transition: all .5s ease;
+  }
+
+  .back-top-enter, .back-top-leave-to /* .fade-leave-active below version 2.1.8 */
+  {
+    opacity: 0;
+  }
 </style>

@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: "BackTop"
+    name: "BackTop",
   }
 </script>
 
@@ -21,4 +21,5 @@
     width: 43px;
     height: 43px;
   }
+
 </style>

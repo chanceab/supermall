@@ -12,10 +12,12 @@
   export default {
     name: "Scroll",
     props: {
+      // 父组件传值 是否监听滚动状态
       probeType: {
         type: Number,
         default: 0
       },
+      // 父组件传值 是否监听上拉事件
       pullUpLoad: {
         type: Boolean,
         default: false
@@ -24,7 +26,6 @@
     data() {
       return {
         scroll: null,
-        message: '哈哈哈'
       }
     },
     mounted() {
@@ -35,19 +36,19 @@
         pullUpLoad: this.pullUpLoad
       })
 
-      // 2.监听滚动的位置
+      // 监听滚动事件
       this.scroll.on('scroll', (position) => {
-        // console.log(position);
         this.$emit('scroll', position)
       })
 
-      // 3.监听上拉事件
+      // 监听上拉事件
       this.scroll.on('pullingUp', () => {
+        // 发送加载事件
         this.$emit('pullingUp')
       })
     },
     methods: {
-      scrollTo(x, y, time=300) {
+      scrollTo(x, y, time = 300) {
         this.scroll.scrollTo(x, y, time)
       },
       finishPullUp() {
