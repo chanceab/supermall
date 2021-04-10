@@ -3,15 +3,22 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control class="tab-control"
+                 :titles="['流行', '新款', '精选']"
+                 @tabClick="tabClick" ref="tabControl_back"
+                 v-show="isTabFixed"/>
     <scroll class="content" ref="scroll"
             :probe-type="3" @scroll="contentScroll"
-            :pull-up-load="true" @pullingUp="loadMore">
-      <home-swiper :banners="banners"/>
+            :pull-up-load="true"
+            @pullingUp="loadMore">
+
+      <home-swiper-vue :banners="banners"
+                       @swiperImageLoad.once="swiperImageLoad"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
       <tab-control class="tab-control"
                    :titles="['流行', '新款', '精选']"
-                   @tabClick="tabClick"/>
+                   @tabClick="tabClick" ref="tabControl"/>
       <good-list :goods="showGoods"/>
     </scroll>
     <transition name="back-top">
@@ -24,7 +31,9 @@
 </template>
 
 <script>
-  import HomeSwiper from './childComps/HomeSwiper'
+  // import HomeSwiperBak from "./childComps/HomeSwiperBak"
+  // import HomeSwiper from "./childComps/HomeSwiper";
+  import HomeSwiperVue from "./childComps/HomeSwiperVue";
   import RecommendView from './childComps/RecommendView'
   import FeatureView from './childComps/FeatureView'
 
@@ -39,14 +48,16 @@
   export default {
     name: "Home",
     components: {
-      HomeSwiper,
+      // HomeSwiperBak,
+      // HomeSwiper,
+      HomeSwiperVue,
       RecommendView,
       FeatureView,
       NavBar,
       TabControl,
       GoodList,
       Scroll,
-      BackTop
+      BackTop,
     },
     data() {
       return {
@@ -58,8 +69,15 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOfSetTop: 0,
+        isTabFixed: false,
       }
+    },
+    mounted() {
+      // 获取 tabControl 的 offsetTop
+      // 每一个组件都有一个属性 $el:用于获取组件中的元素
+      // console.log(this.$refs.tabControl.$el.offsetTop);
     },
     computed: {
       showGoods() {
@@ -91,15 +109,26 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl_back.currentIndex = index;
+        this.$refs.tabControl.currentIndex = index;
       },
       backClick() {
         this.$refs.scroll.scrollTo(0, 0);
       },
       contentScroll(position) {
-        this.isShowBackTop = (-position.y) > 500
+        // 判断上拉是否显示
+        this.isShowBackTop = (-position.y) > 500;
+
+        // 决定 tabContril 是否产生吸顶效果
+        this.isTabFixed = (-position.y) > this.tabOfSetTop
       },
       loadMore() {
         this.getHomeGoods(this.currentType);
+      },
+      swiperImageLoad() {
+        // 获取tabControl离顶部的高度
+        this.tabOfSetTop = this.$refs.tabControl.$el.offsetTop;
+        // console.log(this.$refs.tabControl.$el.offsetTop)
       },
       /**
        * 网络请求相关的方法
@@ -158,12 +187,24 @@
     bottom: 49px;
     left: 0;
     right: 0;
+
   }
 
   .content {
     height: calc(100% - 93px);
     overflow: hidden;
     /*margin-top: 44px;*/
+    overflow-x: scroll
+  }
+
+  .fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 44px;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    height: calc(100% - 65px)
   }
 
   .back-top-enter-active, .back-top-leave-active {
@@ -174,4 +215,5 @@
   {
     opacity: 0;
   }
+
 </style>

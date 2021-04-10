@@ -15,7 +15,7 @@
       // 父组件传值 是否监听滚动状态
       probeType: {
         type: Number,
-        default: 0
+        default: 0,
       },
       // 父组件传值 是否监听上拉事件
       pullUpLoad: {
@@ -32,6 +32,7 @@
       // 1.创建BScroll对象
       this.scroll = new BScroll(this.$refs.wrapper, {
         click: true,
+        observeDOM: true,
         probeType: this.probeType,
         pullUpLoad: this.pullUpLoad
       })
