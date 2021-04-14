@@ -117,6 +117,7 @@
       },
       contentScroll(position) {
         // 判断上拉是否显示
+        // console.log(-position.y)
         this.isShowBackTop = (-position.y) > 500;
 
         // 决定 tabContril 是否产生吸顶效果

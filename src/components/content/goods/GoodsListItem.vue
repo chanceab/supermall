@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="goodsItem.show.img" alt="">
+    <img :src="showImage" alt="">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -20,9 +20,23 @@
         }
       }
     },
+    computed: {
+      showImage() {
+        return this.goodsItem.image || this.goodsItem.show.img;
+      }
+    },
     methods: {
       itemClick() {
-        this.$router.push('/detail/' + this.goodsItem.iid)
+        if (this.goodsItem.show) {
+          this.$router.push('/detail/' + this.goodsItem.iid)
+        }
+        // else {
+        //   this.$router.push('/detail/' + this.goodsItem.item_id)
+        // }
+        /* hoshi
+        *  点击图片地址栏发生改变但是页面不会自动刷新
+        *  手动刷新后页面报错,request 未定义
+        */
       }
     }
   }

@@ -1,5 +1,6 @@
 <template>
-  <div class="swiper-contain">
+  <div class="swiper-contain"
+       :style="'--swiper-pagination-color:' + color">
     <div class="swiper-wrapper">
       <slot></slot>
     </div>
@@ -31,7 +32,13 @@
           return true
         }
       },
-
+      // 传入颜色
+      color: {
+        type: String,
+        default() {
+          return '#fff'
+        }
+      },
       // 手动切换后自动轮播
       autoplay: {
         type: Object,
@@ -100,6 +107,6 @@
 
 <style scoped>
   .swiper-contain {
-    --swiper-pagination-color: #fff; /* 两种都可以 */
+    /* hoshi 无法修改颜色*/
   }
 </style>

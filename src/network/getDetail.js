@@ -1,5 +1,6 @@
 import {request} from './request';
 
+//
 export function getDetail(iid) {
   return request({
     url: '/detail',
@@ -9,7 +10,14 @@ export function getDetail(iid) {
   })
 }
 
+export function getRecommend() {
+  return request({
+    url: '/recommend'
+  })
+}
+
 // 商品信息类
+
 export class Goods {
   constructor(itemInfo, columns, services) {
     this.title = itemInfo.title;

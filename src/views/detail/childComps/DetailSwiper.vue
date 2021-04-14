@@ -1,7 +1,7 @@
 <template>
   <div class="detail-swiper">
     <awesome-swiper :topImages="topImages" :pagination="pagination"
-                    v-if="topImages.length" :loop="true">
+                    v-if="topImages.length" :loop="true" color="#ff4d4f">
       <div class="swiper-slide" v-for="item in topImages">
         <img :src="item">
       </div>
@@ -40,7 +40,7 @@
 
 <style scoped>
   .detail-swiper {
-    height: 300px;
+    height: 55vh;
     position: relative;
     overflow: hidden;
   }
