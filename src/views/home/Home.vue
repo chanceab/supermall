@@ -3,22 +3,30 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <tab-control class="tab-control"
-                 :titles="['流行', '新款', '精选']"
-                 @tabClick="tabClick" ref="tabControl_back"
-                 v-show="isTabFixed"/>
-    <scroll class="content" ref="scroll"
-            :probe-type="3" @scroll="contentScroll"
-            :pull-up-load="true"
-            @pullingUp="loadMore">
-
-      <home-swiper-vue :banners="banners"
-                       @swiperImageLoad.once="swiperImageLoad"/>
+    <tab-control
+      class="tab-control"
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+      ref="tabControl_back"
+      v-show="isTabFixed"
+    />
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore"
+    >
+      <home-swiper-vue :banners="banners" @swiperImageLoad.once="swiperImageLoad"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
-      <tab-control class="tab-control"
-                   :titles="['流行', '新款', '精选']"
-                   @tabClick="tabClick" ref="tabControl"/>
+      <tab-control
+        class="tab-control"
+        :titles="['流行', '新款', '精选']"
+        @tabClick="tabClick"
+        ref="tabControl"
+      />
       <good-list :goods="showGoods"/>
     </scroll>
     <transition name="back-top">
@@ -27,23 +35,22 @@
   </div>
 
   <!--    <back-top @click.native="backClick" v-show="isShowBackTop"/>-->
-
 </template>
 
 <script>
   // import HomeSwiperBak from "./childComps/HomeSwiperBak"
   // import HomeSwiper from "./childComps/HomeSwiper";
   import HomeSwiperVue from "./childComps/HomeSwiperVue";
-  import RecommendView from './childComps/RecommendView'
-  import FeatureView from './childComps/FeatureView'
+  import RecommendView from "./childComps/RecommendView";
+  import FeatureView from "./childComps/FeatureView";
 
-  import NavBar from 'components/common/navbar/NavBar'
-  import TabControl from 'components/content/tabControl/TabControl'
-  import GoodList from 'components/content/goods/GoodsList'
-  import Scroll from 'components/common/scroll/Scroll'
-  import BackTop from 'components/content/backTop/BackTop'
+  import NavBar from "components/common/navbar/NavBar";
+  import TabControl from "components/content/tabControl/TabControl";
+  import GoodList from "components/content/goods/GoodsList";
+  import Scroll from "components/common/scroll/Scroll";
+  import BackTop from "components/content/backTop/BackTop";
 
-  import {getHomeMultidata, getHomeGoods} from "network/home"
+  import {getHomeMultidata, getHomeGoods} from "network/home";
 
   export default {
     name: "Home",
@@ -64,15 +71,15 @@
         banners: [],
         recommends: [],
         goods: {
-          'pop': {page: 0, list: []},
-          'new': {page: 0, list: []},
-          'sell': {page: 0, list: []},
+          pop: {page: 0, list: []},
+          new: {page: 0, list: []},
+          sell: {page: 0, list: []},
         },
-        currentType: 'pop',
+        currentType: "pop",
         isShowBackTop: false,
         tabOfSetTop: 0,
         isTabFixed: false,
-      }
+      };
     },
     mounted() {
       // 获取 tabControl 的 offsetTop
@@ -81,17 +88,17 @@
     },
     computed: {
       showGoods() {
-        return this.goods[this.currentType].list
-      }
+        return this.goods[this.currentType].list;
+      },
     },
     created() {
       // 1.请求多个数据
-      this.getHomeMultidata()
+      this.getHomeMultidata();
 
       // 2.请求商品数据
-      this.getHomeGoods('pop')
-      this.getHomeGoods('new')
-      this.getHomeGoods('sell')
+      this.getHomeGoods("pop");
+      this.getHomeGoods("new");
+      this.getHomeGoods("sell");
     },
     methods: {
       /**
@@ -100,14 +107,14 @@
       tabClick(index) {
         switch (index) {
           case 0:
-            this.currentType = 'pop'
-            break
+            this.currentType = "pop";
+            break;
           case 1:
-            this.currentType = 'new'
-            break
+            this.currentType = "new";
+            break;
           case 2:
-            this.currentType = 'sell'
-            break
+            this.currentType = "sell";
+            break;
         }
         this.$refs.tabControl_back.currentIndex = index;
         this.$refs.tabControl.currentIndex = index;
@@ -118,10 +125,10 @@
       contentScroll(position) {
         // 判断上拉是否显示
         // console.log(-position.y)
-        this.isShowBackTop = (-position.y) > 500;
+        this.isShowBackTop = -position.y > 500;
 
         // 决定 tabContril 是否产生吸顶效果
-        this.isTabFixed = (-position.y) > this.tabOfSetTop
+        this.isTabFixed = -position.y > this.tabOfSetTop;
       },
       loadMore() {
         this.getHomeGoods(this.currentType);
@@ -135,24 +142,25 @@
        * 网络请求相关的方法
        */
       getHomeMultidata() {
-        getHomeMultidata().then(res => {
+        getHomeMultidata().then((res) => {
           // this.result = res;
           this.banners = res.data.banner.list;
           this.recommends = res.data.recommend.list;
-        })
+        });
       },
       getHomeGoods(type) {
-        let page = this.goods[type].page + 1
-        getHomeGoods(type, page).then(res => {
-          this.goods[type].list.push(...res.data.list)
-          this.goods[type].page += 1
+        let page = this.goods[type].page + 1;
+        getHomeGoods(type, page).then((res) => {
+          console.log(res)
+          this.goods[type].list.push(...res.data.list);
+          this.goods[type].page += 1;
 
           // 调用子组件方法
-          this.$refs.scroll.finishPullUp()
-        })
-      }
-    }
-  }
+          this.$refs.scroll.finishPullUp();
+        });
+      },
+    },
+  };
 </script>
 
 <style scoped>
@@ -188,14 +196,13 @@
     bottom: 49px;
     left: 0;
     right: 0;
-
   }
 
   .content {
-    height: calc(100% - 93px);
+    height: calc(100vh - 93px);
     overflow: hidden;
     /*margin-top: 44px;*/
-    overflow-x: scroll
+    overflow-x: scroll;
   }
 
   .fixed {
@@ -205,16 +212,16 @@
     top: 44px;
     overflow-y: hidden;
     overflow-x: scroll;
-    height: calc(100% - 65px)
+    height: calc(100% - 65px);
   }
 
-  .back-top-enter-active, .back-top-leave-active {
-    transition: all .5s ease;
+  .back-top-enter-active,
+  .back-top-leave-active {
+    transition: all 0.5s ease;
   }
 
   .back-top-enter, .back-top-leave-to /* .fade-leave-active below version 2.1.8 */
   {
     opacity: 0;
   }
-
 </style>

@@ -107,6 +107,5 @@
 
 <style scoped>
   .swiper-contain {
-    /* hoshi 无法修改颜色*/
   }
 </style>

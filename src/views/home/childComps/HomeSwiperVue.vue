@@ -1,7 +1,7 @@
 <template>
   <div>
-    <awesome-swiper class="swiper" :pagination="pagination"
-                    :loop='true' v-if="banners.length" ref="Swiper">
+    <awesome-swiper class="swiper" :pagination="pagination" :loop=true
+                    v-if="banners.length" ref="Swiper" color="skyblue">
       <div class="swiper-slide" v-for="item in banners">
         <img :src="item.image" @load="imageLoad">
       </div>
@@ -53,7 +53,7 @@
     width: 100%;
   }
 
-  .swiper-pagination-bullet-active {
-    background-color: #fff
-  }
+  /*.swiper-pagination-bullet-active {*/
+  /*  background-color: #fff*/
+  /*}*/
 </style>
